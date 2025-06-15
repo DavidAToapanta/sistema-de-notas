@@ -1,13 +1,7 @@
 package model;
 
 public class Modulo {
-//    CREATE TABLE tb_modulo (
-//            mo_id INT PRIMARY KEY AUTO_INCREMENT,
-//            mo_nombre VARCHAR(100) NOT NULL,
-//    mo_nro_materias INT NOT NULL,
-//    ca_id INT,
-//    FOREIGN KEY (ca_id) REFERENCES tb_carrera(ca_id)
-//            );
+
     private int id;
     private String nombre;
     private int numeroMateria;

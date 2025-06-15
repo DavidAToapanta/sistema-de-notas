@@ -1,44 +1,55 @@
 package app;
 
-import dao.ModuloDAO;
-import model.Modulo;
+import menu.*;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Scanner;
 
 public class ConexionMySQL {
 
     public static void main(String[] args) {
-        try {
-            // 1. Conexión a la base de datos
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/instituto_quito", "root", "admin"
-            );
+        String url = "jdbc:mysql://localhost:3306/instituto_quito";
+        String user = "root";
+        String password = "admin"; // ← reemplaza con tu contraseña real
 
-            // 2. Crear instancia del DAO
-            ModuloDAO moduloDAO = new ModuloDAO(conn);
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            Scanner scanner = new Scanner(System.in);
+            int opcion;
 
-            // 3. Crear un nuevo módulo
-         
-            // 4. Leer módulo insertado
-            Modulo moduloLeido = moduloDAO.readModulo(3); // Cambia el ID según tu base
-            if (moduloLeido != null) {
-                System.out.println("📦 Módulo leído:");
-                System.out.println("ID: " + moduloLeido.getId());
-                System.out.println("Nombre: " + moduloLeido.getNombre());
-                System.out.println("Nro. Materias: " + moduloLeido.getNumeroMateria());
-                System.out.println("Carrera ID: " + moduloLeido.getIdCarrera());
-            } else {
-                System.out.println("⚠️ Módulo no encontrado");
-            }
+            do {
+                System.out.println("\n===== MENÚ PRINCIPAL =====");
+                System.out.println("1. Carreras");
+                System.out.println("2. Detalle Matrículas");
+                System.out.println("3. Docentes");
+                System.out.println("4. Estudiantes");
+                System.out.println("5. Materias");
+                System.out.println("6. Matrículas");
+                System.out.println("7. Módulos");
+                System.out.println("8. Notas");
+                System.out.println("0. Salir");
+                System.out.print("Seleccione una opción: ");
+                opcion = scanner.nextInt();
 
-            // 5. Actualizar el módulo
-           
+                switch (opcion) {
+                    case 1 -> new menuCarreras(connection).mostrarMenu();
+                    case 2 -> new MenuDetalleMatriculas(connection).mostrarMenu();
+                    case 3 -> new menuDocentes(connection).mostrarMenu();
+                    case 4 -> new menuEstudiantes(connection).mostrarMenu();
+                    case 5 -> new menuMaterias(connection).mostrarMenu();
+                    case 6 -> new menuMatriculas(connection).mostrarMenu();
+                    case 7 -> new menuModulos(connection).mostrarMenu();
+                    case 8 -> new menuNotas(connection).mostrarMenu();
+                    case 0 -> System.out.println("Saliendo del sistema...");
+                    default -> System.out.println("Opción inválida. Intente de nuevo.");
+                }
 
-            // 6. Borrar módulo
+            } while (opcion != 0);
 
-        } catch (Exception e) {
-            System.out.println("❌ Error: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error al conectar con la base de datos: " + e.getMessage());
         }
     }
 }
